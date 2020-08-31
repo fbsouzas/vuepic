@@ -15,6 +15,14 @@
       <li class="image-list-item" :key="image._id" v-for="image of filterImages">
         <image-card-component :title="image.titulo">
           <image-responsive-component :url="image.url" :title="image.titulo" />
+
+          <button-component
+            label="Remover"
+            :hasConfirm="true"
+            confirmText="Deseja realmente remover esta foto?"
+            buttonStyle="danger"
+            @buttonClicked="remove(image)"
+          />
         </image-card-component>
       </li>
     </ul>
@@ -23,11 +31,13 @@
 </template>
 
 <script>
+import Button from '../shared/button/Button.vue';
 import Card from '../shared/image-card/Card.vue';
 import ImageResponsive from '../shared/image/imageResponsive.vue';
 
 export default {
   components: {
+    'button-component': Button,
     'image-card-component': Card,
     'image-responsive-component': ImageResponsive,
   },
@@ -49,6 +59,12 @@ export default {
       }
 
       return this.images;
+    },
+  },
+
+  methods: {
+    remove(image) {
+      alert('Imagem ' + image.titulo + ' removida');
     },
   },
 

@@ -1,5 +1,4 @@
 <template>
-
   <div class="image-card">
     <h2 class="image-card-title" @dblclick="visibled = !visibled">
       {{ title }}
@@ -11,12 +10,16 @@
       </div>
     </transition>
   </div>
-
 </template>
 
 <script>
 export default {
-  props: ['title'],
+  props: {
+    title: {
+      type: String,
+      required: true,
+    }
+  },
 
   data() {
     return {

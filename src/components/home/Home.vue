@@ -13,17 +13,17 @@
 
     <ul class="image-list">
       <li class="image-list-item" :key="image._id" v-for="image of filterImages">
-        <image-card-component :title="image.titulo">
-          <image-responsive-component v-my-transform:scale.animate="1.1" :url="image.url" :title="image.titulo" />
+        <my-image-card :title="image.titulo">
+          <my-image-responsive v-my-transform:scale.animate="1.1" :url="image.url" :title="image.titulo" />
 
-          <button-component
+          <my-button
             label="Remover"
             :hasConfirm="true"
             confirmText="Deseja realmente remover esta foto?"
             buttonStyle="danger"
             @buttonClicked="remove(image)"
           />
-        </image-card-component>
+        </my-image-card>
       </li>
     </ul>
   </div>
@@ -37,9 +37,9 @@ import ImageResponsive from '../shared/image/imageResponsive.vue';
 
 export default {
   components: {
-    'button-component': Button,
-    'image-card-component': Card,
-    'image-responsive-component': ImageResponsive,
+    'my-button': Button,
+    'my-image-card': Card,
+    'my-image-responsive': ImageResponsive,
   },
 
   data() {

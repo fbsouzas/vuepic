@@ -14,7 +14,7 @@
     <ul class="image-list">
       <li class="image-list-item" :key="image._id" v-for="image of filterImages">
         <image-card-component :title="image.titulo">
-          <image-responsive-component :url="image.url" :title="image.titulo" />
+          <image-responsive-component v-my-transform:scale.animate="1.1" :url="image.url" :title="image.titulo" />
 
           <button-component
             label="Remover"

@@ -68,4 +68,8 @@ export default {
 .fade-card-leave-active {
   transition: opacity .4s;
 }
+
+.image-card-content {
+  overflow: hidden;
+}
 </style>

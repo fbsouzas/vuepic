@@ -3,6 +3,8 @@
   <div>
     <h1 class="page-title">{{ title }}</h1>
 
+    <p v-show="message" class="center">{{ message }}</p>
+
     <input
       type="search"
       name="filter"
@@ -34,8 +36,9 @@
 import Button from '../shared/button/Button.vue';
 import Card from '../shared/image-card/Card.vue';
 import ImageResponsive from '../shared/image/imageResponsive.vue';
-
 import transform from '../../directives/Transform';
+
+import ImageService from '../../domain/image/ImageService';
 
 export default {
   components: {
@@ -53,6 +56,7 @@ export default {
       title: 'Vuepic',
       images: [],
       filter: '',
+      message: '',
     };
   },
 
@@ -70,13 +74,25 @@ export default {
 
   methods: {
     remove(image) {
-      alert('Imagem ' + image.titulo + ' removida');
+      this.service.delete(image._id)
+        .then(() => {
+          let index = this.images.indexOf(image);
+
+          this.images.splice(index, 1);
+          this.message = 'Imagem removida com sucesso!';
+        }, err => {
+          console.log(err);
+
+          this.message = 'Algo não está certo. Não foi possível remover a imagem!';
+        });
     },
   },
 
   created() {
-    this.$http.get('http://localhost:3000/v1/fotos')
-      .then(res => res.json())
+    this.service = new ImageService(this.$resource);
+
+    this.service
+      .list()
       .then(images => this.images = images, err => console.error(err));
   },
 
@@ -84,7 +100,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.page-title {
+.page-title,
+.center {
   text-align: center;
 }
 

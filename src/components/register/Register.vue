@@ -23,7 +23,7 @@
       <div class="center">
         <my-button type="submit" label="Salvar" />
 
-        <router-link to="/">
+        <router-link :to="{ name: 'home' }">
           <my-button type="button" label="Voltar" />
         </router-link>
 
@@ -38,6 +38,8 @@ import Image from '../../domain/image/Image';
 import ImageResposive from '../shared/image/imageResponsive.vue';
 import Button from '../shared/button/Button.vue';
 
+import ImageService from '../../domain/image/ImageService';
+
 export default {
   components: {
     'my-image-responsive': ImageResposive,
@@ -50,9 +52,13 @@ export default {
     };
   },
 
+  created() {
+    this.service = new ImageService(this.$resource);
+  },
+
   methods: {
     save() {
-      this.$http.post('http://localhost:3000/v1/fotos', {
+      this.service.create({
         titulo: this.image.title,
         url: this.image.url,
         descricao: this.image.description,

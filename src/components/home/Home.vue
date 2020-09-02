@@ -18,6 +18,10 @@
         <my-image-card :title="image.titulo">
           <my-image-responsive v-my-transform:scale.animate="1.2" :url="image.url" :title="image.titulo" />
 
+          <router-link :to="{ name: 'update', params: { id: image._id } }">
+            <my-button type="button" label="Editar" />
+          </router-link>
+
           <my-button
             label="Remover"
             :hasConfirm="true"
@@ -92,7 +96,7 @@ export default {
     this.service = new ImageService(this.$resource);
 
     this.service
-      .list()
+      .findAll()
       .then(images => this.images = images, err => console.error(err));
   },
 

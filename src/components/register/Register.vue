@@ -1,9 +1,11 @@
 <template>
   <div>
-    <h1 class="center">Cadastro</h1>
+    <h1 v-if="!image._id" class="center">Cadastro de imagem</h1>
+    <h1 v-else class="center">Atualização de imagem</h1>
+
     <h2 class="center">{{ image.title }}</h2>
 
-    <form @submit.prevent="save()">
+    <form @submit.prevent="submit()">
       <div class="control">
         <label for="title">Título</label>
         <input id="title" autocomplete="off" v-model.lazy="image.title" />
@@ -21,13 +23,13 @@
       </div>
 
       <div class="center">
-        <my-button type="submit" label="Salvar" />
+        <my-button type="submit" :label="this.id ? 'Atualizar' : 'Salvar'" />
 
         <router-link :to="{ name: 'home' }">
           <my-button type="button" label="Voltar" />
         </router-link>
 
-        <my-button type="submit" label="Limpar" @click="clear()" />
+        <my-button type="button" label="Limpar" @click.native="clear()" />
       </div>
     </form>
   </div>
@@ -49,14 +51,33 @@ export default {
   data() {
     return {
       image: new Image(),
+      id: this.$route.params.id,
     };
   },
 
   created() {
     this.service = new ImageService(this.$resource);
+
+    if (this.id) {
+      this.service.find(this.id)
+        .then(image => this.image = {
+          _id: image._id,
+          title: image.titulo,
+          url: image.url,
+          description: image.descricao,
+        });
+    }
   },
 
   methods: {
+    submit() {
+      if (this.image._id) {
+        return this.update();
+      }
+
+      this.save();
+    },
+
     save() {
       this.service.create({
         titulo: this.image.title,
@@ -64,6 +85,16 @@ export default {
         descricao: this.image.description,
       })
         .then(() => this.clear(), err => console.log(err));
+    },
+
+    update() {
+      this.service.update({
+        _id: this.image._id,
+        titulo: this.image.title,
+        url: this.image.url,
+        descricao: this.image.description,
+      })
+        .then(() => this.$router.push({ name: 'home' }), err => console.log(err));
     },
 
     clear() {

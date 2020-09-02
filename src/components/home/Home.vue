@@ -14,7 +14,7 @@
     <ul class="image-list">
       <li class="image-list-item" :key="image._id" v-for="image of filterImages">
         <my-image-card :title="image.titulo">
-          <my-image-responsive v-my-transform:scale.animate="1.1" :url="image.url" :title="image.titulo" />
+          <my-image-responsive v-my-transform:scale.animate="1.2" :url="image.url" :title="image.titulo" />
 
           <my-button
             label="Remover"
@@ -35,11 +35,17 @@ import Button from '../shared/button/Button.vue';
 import Card from '../shared/image-card/Card.vue';
 import ImageResponsive from '../shared/image/imageResponsive.vue';
 
+import transform from '../../directives/Transform';
+
 export default {
   components: {
     'my-button': Button,
     'my-image-card': Card,
     'my-image-responsive': ImageResponsive,
+  },
+
+  directives: {
+    'my-transform': transform,
   },
 
   data() {

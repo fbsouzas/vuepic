@@ -1,6 +1,4 @@
-import Vue from 'vue';
-
-Vue.directive('my-transform', {
+export default {
   bind(el, binding, vnode) {
     let current = 0;
 
@@ -16,7 +14,15 @@ Vue.directive('my-transform', {
       }
     });
   },
-});
+};
+
+function getRotateValue(binding, current) {
+  if (binding.modifiers.reverse) {
+    return current -= binding.value || 90;
+  }
+
+  return current += binding.value || 90;
+}
 
 function getEffect(binding, current) {
   if (binding.arg == 'scale') {
@@ -26,12 +32,4 @@ function getEffect(binding, current) {
   }
 
   return `rotate(${current}deg)`;
-}
-
-function getRotateValue(binding, current) {
-  if (binding.modifiers.reverse) {
-    return current -= binding.value || 90;
-  }
-
-  return current += binding.value || 90;
 }

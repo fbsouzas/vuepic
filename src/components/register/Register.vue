@@ -5,44 +5,56 @@
 
     <h2 class="center">{{ image.title }}</h2>
 
-    <form @submit.prevent="submit()">
-      <div class="control">
-        <label for="title">Título</label>
-        <input id="title" autocomplete="off" v-model.lazy="image.title" />
-      </div>
+    <ValidationObserver v-slot="{ handleSubmit }">
+      <form @submit.prevent="handleSubmit(onSubmit)">
+        <ValidationProvider name="título" rules="required|min:5|max:60">
+          <div class="control" slot-scope="{ errors }">
+            <label for="title">Título</label>
+            <input
+              id="title"
+              name="title"
+              autocomplete="off"
+              v-model.lazy="image.title"
+            />
+            <span class="validate-error">{{ errors[0] }}</span>
+          </div>
+        </ValidationProvider>
 
-      <div class="control">
-        <label for="url">URL</label>
-        <input id="url" autocomplete="off" v-model.lazy="image.url" />
-        <my-image-responsive v-show="image.url" :url="image.url" :title="image.title" />
-      </div>
+        <ValidationProvider name="url" rules="required">
+          <div class="control" slot-scope="{ errors }">
+            <label for="url">URL</label>
+            <input id="url" autocomplete="off" v-model.lazy="image.url" />
+            <my-image-responsive v-show="image.url" :url="image.url" :title="image.title" />
+            <span class="validate-error">{{ errors[0] }}</span>
+          </div>
+        </ValidationProvider>
 
-      <div class="control">
-        <label for="description">Descrição</label>
-        <textarea id="description" autocomplete="off" v-model="image.description" />
-      </div>
+        <div class="control">
+          <label for="description">Descrição</label>
+          <textarea id="description" autocomplete="off" v-model="image.description" />
+        </div>
 
-      <p class="center" v-show="message">{{ message }}</p>
+        <p class="center" v-show="message">{{ message }}</p>
 
-      <div class="center">
-        <my-button type="submit" :label="this.id ? 'Atualizar' : 'Salvar'" />
+        <div class="center">
+          <my-button type="submit" :label="image._id ? 'Atualizar' : 'Salvar'" />
 
-        <router-link :to="{ name: 'home' }">
-          <my-button type="button" label="Voltar" />
-        </router-link>
+          <router-link :to="{ name: 'home' }">
+            <my-button type="button" label="Voltar" />
+          </router-link>
 
-        <my-button type="button" label="Limpar" @click.native="clear()" />
-      </div>
-    </form>
+          <my-button type="button" label="Limpar" @click.native="clear()" />
+        </div>
+      </form>
+    </ValidationObserver>
   </div>
 </template>
 
 <script>
-import Image from '../../domain/image/Image';
-import ImageResposive from '../shared/image/imageResponsive.vue';
 import Button from '../shared/button/Button.vue';
-
+import Image from '../../domain/image/Image';
 import ImageService from '../../domain/image/ImageService';
+import ImageResposive from '../shared/image/imageResponsive.vue';
 
 export default {
   components: {
@@ -73,7 +85,7 @@ export default {
   },
 
   methods: {
-    submit() {
+    onSubmit() {
       if (this.image._id) {
         this.update();
 
@@ -89,7 +101,7 @@ export default {
         url: this.image.url,
         descricao: this.image.description,
       })
-        .then(() => this.clear(), err => this.message = err.message);
+        .then(() => this.$router.push({ name: 'home' }), err => this.message = err.message);
     },
 
     update() {
@@ -100,10 +112,6 @@ export default {
         descricao: this.image.description,
       })
         .then(() => this.$router.push({ name: 'home' }), err => this.message = err.message);
-    },
-
-    clear() {
-      this.image = new Image();
     },
   },
 }
@@ -129,5 +137,10 @@ export default {
   width: 100%;
   font-size: inherit;
   border-radius: 5px
+}
+
+.validate-error {
+  color: red;
+  font-size: 13px;
 }
 </style>

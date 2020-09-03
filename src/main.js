@@ -8,6 +8,8 @@ import * as rules from 'vee-validate/dist/rules';
 
 import { routes } from './routes';
 
+import 'bootstrap/dist/css/bootstrap.css';
+
 Vue.use(VueResource);
 Vue.use(VueRouter);
 

@@ -84,11 +84,7 @@ export default {
 
           this.images.splice(index, 1);
           this.message = 'Imagem removida com sucesso!';
-        }, err => {
-          console.log(err);
-
-          this.message = 'Algo não está certo. Não foi possível remover a imagem!';
-        });
+        }, err => this.message = err.message);
     },
   },
 
@@ -97,7 +93,7 @@ export default {
 
     this.service
       .findAll()
-      .then(images => this.images = images, err => console.error(err));
+      .then(images => this.images = images, err => this.message = err.message);
   },
 
 }

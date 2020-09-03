@@ -22,6 +22,8 @@
         <textarea id="description" autocomplete="off" v-model="image.description" />
       </div>
 
+      <p class="center" v-show="message">{{ message }}</p>
+
       <div class="center">
         <my-button type="submit" :label="this.id ? 'Atualizar' : 'Salvar'" />
 
@@ -52,6 +54,7 @@ export default {
     return {
       image: new Image(),
       id: this.$route.params.id,
+      message: '',
     };
   },
 
@@ -65,14 +68,16 @@ export default {
           title: image.titulo,
           url: image.url,
           description: image.descricao,
-        });
+        }, err => this.message = err.message);
     }
   },
 
   methods: {
     submit() {
       if (this.image._id) {
-        return this.update();
+        this.update();
+
+        return;
       }
 
       this.save();
@@ -84,7 +89,7 @@ export default {
         url: this.image.url,
         descricao: this.image.description,
       })
-        .then(() => this.clear(), err => console.log(err));
+        .then(() => this.clear(), err => this.message = err.message);
     },
 
     update() {
@@ -94,7 +99,7 @@ export default {
         url: this.image.url,
         descricao: this.image.description,
       })
-        .then(() => this.$router.push({ name: 'home' }), err => console.log(err));
+        .then(() => this.$router.push({ name: 'home' }), err => this.message = err.message);
     },
 
     clear() {
